@@ -2455,16 +2455,16 @@ static void *get_salt(char *ciphertext)
  *********************************************************************************/
 static int salt_hash(void *salt)
 {
-	unsigned long H;
+	uint32_t H;
 	if (!salt) return 0;
 	if ( (curdat.pSetup->flags&MGF_SALTED) == 0)
 		return 0;
 
 	// salt is now a pointer, but WORD aligned.  We remove that word alingment, and simply use the next bits
 #if ARCH_ALLOWS_UNALIGNED
-	H = *((unsigned long*)salt);
+	H = *((uint32_t*)salt);
 #else
-	memcpy(&H, salt, 8);
+	memcpy(&H, salt, sizeof(H));
 #endif
 
 	// Mix up the pointer value (H^(H>>9)) so that if we have a fixed sized allocation
